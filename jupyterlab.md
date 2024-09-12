@@ -20,7 +20,7 @@ c.NotebookApp.ip = '0.0.0.0' \
 c.NotebookApp.open_browser = False \
 c.NotebookApp.port = 8888 \
 c.NotebookApp.enable_mathjax = True \
-c.NotebookApp.notebook_dir = u'/home/<username>/jupyter_workdir'
+c.NotebookApp.notebook_dir = u'/home/{username}/jupyter_workdir'
 
 ## Run jupyterlab:
 
@@ -28,10 +28,10 @@ From commandline: \
 $ jupyter lab
 
 From Client: \
-Navigate to https://<hostname>:8888
+Navigate to https://{hostname}:8888
 
 Or: \
-$ ssh -L 8888:localhost:8888 <username>@<hostname> \
+$ ssh -L 8888:localhost:8888 {username}@{hostname} \
 Then navigate to https://localhost:8888
 
 
@@ -46,8 +46,8 @@ Edit the file /usr/lib/systemd/system/jupyterlab.service to look like this:
 [Unit] \
 Description=Jupyterlab \
 [Service] \
-ExecStart=/usr/bin/bash -c "cd /home/username; /home/<username>/anaconda3/bin/jupyter lab" \
-User=<username> \
+ExecStart=/usr/bin/bash -c "cd /home/username; /home/{username}/anaconda3/bin/jupyter lab" \
+User={username} \
 Group=users \
 [Install] \
 WantedBy=default.target
