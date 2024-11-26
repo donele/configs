@@ -32,11 +32,11 @@ tv() {
     
         tmux new-window -n sim
         tmux send-keys -t sim 'cd /fsx/jlee/simbase' C-m
-    	tmux split-window -h -t sim
+    	tmux split-window -h -t sim 'cd /fsx/jlee/simbase' C-m
     
         tmux new-window -n capture
         tmux send-keys -t capture 'cd /fsx/jlee/fitbase' C-m
-    	tmux split-window -h -t capture
+    	tmux split-window -h -t capture 'cd /fsx/jlee/simbase' C-m
     
     	tmux select-window -t code.1
     	tmux select-pane -t 1
