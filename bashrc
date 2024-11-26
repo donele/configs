@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 # Source global definitions
 if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
@@ -19,6 +18,7 @@ export PS1="\e[0;36m[\$(weekday) \t \u@\h:\w]\e[m\$(get_git_branch)\e[m\n$ "
 export EDITOR=vim
 
 alias s="source ~/.bashrc"
+alias py='python'
 alias lt='ls -lrt'
 alias ll='ls -al'
 alias tf='tail -f'
@@ -43,20 +43,10 @@ last_file=`ls -rt *.log | tail -n 1`
 echo $ tail -f $last_file
 tail -f $last_file
 }
-# <<< my settings <<<
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/jdlee/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/home/jdlee/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/jdlee/anaconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/home/jdlee/anaconda3/bin:$PATH"
-    fi
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+if [[ -f /fsx/jlee/venv311shared/bin/activate ]]; then
+    source /fsx/jlee/venv311shared/bin/activate
 fi
-unset __conda_setup
-# <<< conda initialize <<<
-
