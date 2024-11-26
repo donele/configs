@@ -26,17 +26,15 @@ tv() {
     	tmux rename-window -t my-session:1 htop
     	tmux send-keys -t htop 'htop' C-m
     
-        tmux new-window -n code
+        tmux new-window -n code -c "/fsx/jlee/repos/execution-monorepo"
     	tmux split-window -v -p 10 -t code
-        tmux send-keys -t code.1 'cd /fsx/jlee/repos/execution-monorepo; vim -c "NERDTree"' C-m
+        tmux send-keys -t code.1 'vim -c "NERDTree"' C-m
     
-        tmux new-window -n sim
-        tmux send-keys -t sim 'cd /fsx/jlee/simbase' C-m
-    	tmux split-window -h -t sim 'cd /fsx/jlee/simbase' C-m
+        tmux new-window -n sim -c "/fsx/jlee/simbase"
+    	tmux split-window -h -t sim -c "/fsx/jlee/simbase"
     
-        tmux new-window -n capture
-        tmux send-keys -t capture 'cd /fsx/jlee/fitbase' C-m
-    	tmux split-window -h -t capture 'cd /fsx/jlee/simbase' C-m
+        tmux new-window -n capture -c "/fsx/jlee/simbase"
+    	tmux split-window -h -t capture  -c "/fsx/jlee/simbase"
     
     	tmux select-window -t code.1
     	tmux select-pane -t 1
