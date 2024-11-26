@@ -1,0 +1,7 @@
+# \e[x;ym : start color scheme, x = 0, y = 30-36
+# \e[m : stop color scheme
+# 0;36 : cyan
+export PS1="\e[0;36m[\$(weekday) \t \u@\h:\w]\e[m\$(get_git_branch)\e[m\n$ "
+export EDITOR=vim
+
+

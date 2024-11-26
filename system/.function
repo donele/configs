@@ -1,0 +1,45 @@
+echo loading functions
+
+get_git_branch() {
+    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+
+weekday() {
+    date +%a
+}
+
+ltf() {
+    last_file=`ls -rt *.log | tail -n 1`
+    echo $ tail -f $last_file
+    tail -f $last_file
+}
+
+tv() {
+    if tmux has-session -t my-session > /dev/null 2>&1; then
+    	echo tmux attaching to my-session
+    	tmux attach -d -t my-session
+    
+    else
+    	echo tmux creating my-session
+    	tmux new-session -d -s my-session -c "$HOME"
+    
+    	tmux rename-window -t my-session:1 htop
+    	tmux send-keys -t htop 'htop' C-m
+    
+        tmux new-window -n code
+    	tmux split-window -v -p 10 -t code
+        tmux send-keys -t code.1 'cd /fsx/jlee/repos/execution-monorepo; vim -c "NERDTree"' C-m
+    
+        tmux new-window -n sim
+        tmux send-keys -t sim 'cd /fsx/jlee/simbase' C-m
+    	tmux split-window -h -t sim
+    
+        tmux new-window -n capture
+        tmux send-keys -t capture 'cd /fsx/jlee/fitbase' C-m
+    	tmux split-window -h -t capture
+    
+    	tmux select-window -t code.1
+    	tmux select-pane -t 1
+    	tmux -2 attach-session -t my-session
+    fi
+}
