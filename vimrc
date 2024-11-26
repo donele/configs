@@ -21,6 +21,10 @@ filetype plugin indent on    " required
 
 " ==================================================================
 
+" Python folding
+set foldmethod=indent
+set foldnestmax=2
+
 " Leader.
 let mapleader =" "
 
