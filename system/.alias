@@ -1,4 +1,3 @@
-echo aliases loaded.
 alias s="source ~/.bashrc"
 alias py='python'
 alias lt='ls -lrt'
