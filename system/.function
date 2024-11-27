@@ -14,28 +14,28 @@ ltf() {
 
 tv() {
     if tmux has-session -t my-session > /dev/null 2>&1; then
-    	echo tmux attaching to my-session
-    	tmux attach -d -t my-session
+        echo tmux attaching to my-session
+        tmux attach -d -t my-session
     
     else
-    	echo tmux creating my-session
-    	tmux new-session -d -s my-session -c "$HOME"
+        echo tmux creating my-session
+        tmux new-session -d -s my-session -c "$HOME"
     
-    	tmux rename-window -t my-session:1 htop
-    	tmux send-keys -t htop 'htop' C-m
+        tmux rename-window -t my-session:1 htop
+        tmux send-keys -t htop 'htop' C-m
     
         tmux new-window -n code -c "/fsx/jlee/repos/execution-monorepo"
-    	tmux split-window -v -p 10 -t code
+        tmux split-window -v -p 10 -t code
         tmux send-keys -t code.1 'vim -c "NERDTree"' C-m
     
         tmux new-window -n sim -c "/fsx/jlee/simbase"
-    	tmux split-window -h -t sim -c "/fsx/jlee/simbase"
+        tmux split-window -h -t sim -c "/fsx/jlee/simbase"
     
-        tmux new-window -n capture -c "/fsx/jlee/simbase"
-    	tmux split-window -h -t capture  -c "/fsx/jlee/simbase"
+        tmux new-window -n capture -c "/fsx/jlee/fitbase"
+        tmux split-window -h -t capture  -c "/fsx/jlee/fitbase"
     
-    	tmux select-window -t code.1
-    	tmux select-pane -t 1
-    	tmux -2 attach-session -t my-session
+        tmux select-window -t code.1
+        tmux select-pane -t 1
+        tmux -2 attach-session -t my-session
     fi
 }
