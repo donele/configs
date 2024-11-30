@@ -1,4 +1,8 @@
-alias s="source ~/.bashrc"
+if env | grep SHELL | grep bash > /dev/null; then
+  alias s="source ~/.bashrc"
+elif env | grep SHELL | grep zsh > /dev/null; then
+  alias s="source ~/.zshrc"
+fi
 
 alias ..="cd .."
 alias ...="cd ../.."
