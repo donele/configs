@@ -21,21 +21,46 @@ tv() {
         echo tmux creating my-session
         tmux new-session -d -s my-session -c "$HOME"
     
+        # 1
         tmux rename-window -t my-session:1 htop
         tmux send-keys -t htop 'htop' C-m
     
+        # 2
         tmux new-window -n code -c "/fsx/jlee/repos/execution-monorepo"
-        tmux split-window -v -p 10 -t code
+        tmux split-window -v -t code -c "/fsx/jlee/repos/quant-research"
         tmux send-keys -t code.1 'vim -c "NERDTree"' C-m
+        tmux send-keys -t code.2 'vim -c "NERDTree"' C-m
     
+        # 3
         tmux new-window -n sim -c "/fsx/jlee/simbase"
         tmux split-window -h -t sim -c "/fsx/jlee/simbase"
     
+        # 4
         tmux new-window -n capture -c "/fsx/jlee/fitbase"
-        tmux split-window -h -t capture  -c "/fsx/jlee/fitbase"
+        tmux split-window -h -t capture
+
+        # 5
+        tmux new-window -n config -c "/fsx/jlee/repos/execution-monorepo"
+        tmux split-window -h -t config
+
+        # 6
+        tmux new-window -n s3 -c "/fsx/jlee/s3"
+        tmux split-window -h -t s3
+
+        # 7
+        tmux new-window -n report -c "/fsx/jlee/scorebase"
+        tmux split-window -h -t report
     
         tmux select-window -t code.1
         tmux select-pane -t 1
         tmux -2 attach-session -t my-session
     fi
+}
+
+vmon() {
+    while true; do cat /fsx/jlee/cronlog/mon/daily_volume.txt; echo ""; echo -n "          "; date +%Y-%m-%d\ %H:%M:%S; sleep 600; done
+}
+
+imon() {
+    while true; do cat /fsx/jlee/cronlog/mon/live_volume.txt; echo ""; echo -n "          "; date +%Y-%m-%d\ %H:%M:%S; sleep 60; done
 }
