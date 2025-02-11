@@ -15,7 +15,7 @@ Plugin 'VundleVim/Vundle.vim'
 " plugin on GitHub repo
 Plugin 'tpope/vim-fugitive'
 Plugin 'preservim/nerdtree'
-Plugin 'rust-lang/rust.vim'
+" Plugin 'rust-lang/rust.vim'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -23,8 +23,8 @@ filetype plugin indent on    " required
 " ==================================================================
 
 " Python folding
-set foldmethod=indent
-set foldnestmax=2
+" set foldmethod=indent
+" set foldnestmax=2
 
 " Leader.
 let mapleader =" "
@@ -36,11 +36,10 @@ set diffopt=vertical
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " Tab definitions.
-set tabstop=4 softtabstop=0 expandtab shiftwidth=4
+set tabstop=2 softtabstop=0 expandtab shiftwidth=2
 
 " Extend % matching.
 runtime macros/matchit.vim
-
 " Path used for finding files.
 set path+=~/gtdev/globaltickdata/source/include
 
@@ -52,14 +51,33 @@ if !exists(":DiffOrig")
 endif
 
 syntax on
-colorscheme slate
+
+colo iceberg
 
 "----------------------------------------------------------------------------
 " Mappings ------------------------------------------------------------------
 "----------------------------------------------------------------------------
 
+" Colors
+nnoremap <leader>i :colo iceberg<cr>
+" nnoremap <leader>c :colo cake16<cr>
+nnoremap <leader>m :colo morning<cr>
+nnoremap <leader>r :colo ron<cr>
+" nnoremap <leader>e :colo one<cr>
+" nnoremap <leader>r :colo rosepine_dawn<cr>
+" nnoremap <leader>f :set bg=light<cr>:colo two-firewatch<cr>
+
 " Quick write.
 nnoremap <leader>w :w<cr>
+nnoremap <leader>q :q<cr>
+nnoremap <leader>p :set paste<cr>
+nnoremap <leader>P :set nopaste<cr>
+nnoremap <leader>h 2gt
+nnoremap <leader>j gt
+nnoremap <leader>k gT
+nnoremap <leader>l 2gT
+nnoremap <leader>= =a{
+nnoremap <leader>s :source ~/.vimrc<cr>
 
 " Disable F1
 nmap <F1> <nop>
@@ -69,7 +87,7 @@ imap <F1> <nop>
 "nnoremap ; :
 
 " Command history. Finger will come to 'k' anyway, so map it to 'k'.
-nnoremap <leader>k q:
+" nnoremap <leader>k q:
 
 " Let <leader>/ clear highlights.
 set hlsearch
@@ -78,6 +96,9 @@ nmap <silent> <leader>/ :nohlsearch<cr>
 " Insert lines.
 nmap <leader>o o<ESC>k
 nmap <leader>O O<ESC>j
+
+" C-w
+nmap <leader>w <C-w>
 
 " Write as a root.
 cmap w!! w !sudo tee % >/dev/null
