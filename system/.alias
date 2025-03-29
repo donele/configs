@@ -10,9 +10,11 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias -- -="cd -"
 
+alias cdr="cd /fsx/jlee/repos"
 alias cds="cd /fsx/jlee/simbase"
 alias cdf="cd /fsx/jlee/fitbase"
 alias cdp="cd /fsx/jlee/pynb"
+alias cdc="cd /fsx/jlee/repos/quant-research/packages/configs"
 
 alias lt='ls -lrt'
 alias ll='ls -al'
@@ -31,3 +33,7 @@ alias pf='sudo perf stat -B -e cache-references,cache-misses,cycles,instructions
 alias cmake_debug="cmake -DCMAKE_BUILD_TYPE=Debug"
 alias mergepdf='gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=_merged.pdf'
 alias path='echo -e ${PATH//:/\\n}'
+
+alias rbackfill='for d in `ls -d w*`; do cd $d && (py ../backfill.py); cd ..; done'
+alias rana='for d in `ls -d w*`; do cd $d && (py ../ana.py&); cd ..; done'
+alias lt1='ls -lrt w*/log/or* | tail -1'
