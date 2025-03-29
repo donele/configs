@@ -23,7 +23,12 @@ tv() {
     
         # 1
         tmux rename-window -t my-session:1 htop
-        tmux send-keys -t htop 'htop' C-m
+        tmux split-window -v -t htop
+        tmux split-window -h -t htop.2
+
+        tmux send-keys -t htop.1 'htop' C-m
+        tmux send-keys -t htop.2 'vmon' C-m
+        tmux send-keys -t htop.3 'imon' C-m
     
         # 2
         tmux new-window -n code -c "/fsx/jlee/repos/execution-monorepo"
@@ -40,8 +45,8 @@ tv() {
         tmux split-window -h -t capture
 
         # 5
-        tmux new-window -n config -c "/fsx/jlee/repos/execution-monorepo"
-        tmux split-window -h -t config
+        tmux new-window -n config -c "/fsx/jlee/repos/quant-research/configs"
+        tmux split-window -h -t config -c "/fsx/jlee/repos/quant-research/configs"
 
         # 6
         tmux new-window -n s3 -c "/fsx/jlee/s3"
@@ -50,7 +55,17 @@ tv() {
         # 7
         tmux new-window -n report -c "/fsx/jlee/scorebase"
         tmux split-window -h -t report
+
+        #8
+        tmux new-window -n staging
+
+        #9
+        tmux new-window -n nexyst
+
+        #10
+        tmux new-window -n temple-okx
     
+        #
         tmux select-window -t code.1
         tmux select-pane -t 1
         tmux -2 attach-session -t my-session
@@ -58,9 +73,9 @@ tv() {
 }
 
 vmon() {
-    while true; do cat /fsx/jlee/cronlog/mon/daily_volume.txt; echo ""; echo -n "          "; date +%Y-%m-%d\ %H:%M:%S; sleep 600; done
+    while true; do cat /fsx/jlee/cronlog/mon/daily_volume.txt; echo ""; sleep 600; done
 }
 
 imon() {
-    while true; do cat /fsx/jlee/cronlog/mon/live_volume.txt; echo ""; echo -n "          "; date +%Y-%m-%d\ %H:%M:%S; sleep 60; done
+    while true; do cat /fsx/jlee/cronlog/mon/live_volume.txt; echo ""; sleep 60; done
 }
