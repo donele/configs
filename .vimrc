@@ -68,6 +68,7 @@ nnoremap <leader>r :colo ron<cr>
 " nnoremap <leader>f :set bg=light<cr>:colo two-firewatch<cr>
 
 " Quick write.
+nnoremap <leader>g `
 nnoremap <leader>w :w<cr>
 nnoremap <leader>q :q<cr>
 nnoremap <leader>p :set paste<cr>
