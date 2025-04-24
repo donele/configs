@@ -42,11 +42,11 @@ tv() {
     
         # 4
         tmux new-window -n capture -c "/fsx/jlee/fitbase"
-        tmux split-window -h -t capture
+        tmux split-window -h -t capture -c "/fsx/jlee/fitbase"
 
         # 5
-        tmux new-window -n config -c "/fsx/jlee/repos/quant-research/configs"
-        tmux split-window -h -t config -c "/fsx/jlee/repos/quant-research/configs"
+        tmux new-window -n config -c "/fsx/jlee/repos/quant-research/packages/configs"
+        tmux split-window -h -t config -c "/fsx/jlee/repos/quant-research/packages/configs"
 
         # 6
         tmux new-window -n s3 -c "/fsx/jlee/s3"
@@ -78,4 +78,52 @@ vmon() {
 
 imon() {
     while true; do cat /fsx/jlee/cronlog/mon/live_volume.txt; echo ""; sleep 60; done
+}
+
+debug_capture() {
+BIN_DIR=/fsx/jlee/repos/execution-monorepo/debug
+LD_LIBRARY_PATH=$BIN_DIR/lib \
+    MTS_TARDIS_NORM_BUCKET=882309744858-versifi-tickdata-ap-northeast-1/apne1 \
+    USER=TRADING-87ff56d2a46a413b91cb5d0772848feb \
+    gdb --args \
+    $BIN_DIR/bin/sampler \
+    --date $1 \
+    --config $2
+}
+
+run_capture() {
+BIN_DIR=/fsx/jlee/repos/execution-monorepo/build
+LD_LIBRARY_PATH=$BIN_DIR/lib \
+    MTS_TARDIS_NORM_BUCKET=882309744858-versifi-tickdata-ap-northeast-1/apne1 \
+    USER=TRADING-87ff56d2a46a413b91cb5d0772848feb \
+    $BIN_DIR/bin/sampler \
+    --date $1 \
+    --config $2
+}
+
+debug_trading() {
+BUILD_DIR=/fsx/jlee/repos/execution-monorepo/debug
+LD_LIBRARY_PATH=$BDUILD_DIR/lib \
+    MTS_TARDIS_NORM_BUCKET=882309744858-versifi-tickdata-ap-northeast-1/apne1 \
+    USER=TRADING-77ff56d2a46a413b91cb5d0772848feb \
+    gdb --args \
+    $BUILD_DIR/bin/hft \
+    --date $1 \
+    --config $2 \
+    --model_config $3
+}
+
+run_trading() {
+BUILD_DIR=/fsx/jlee/repos/execution-monorepo/build
+LD_LIBRARY_PATH=$BDUILD_DIR/lib \
+    MTS_TARDIS_NORM_BUCKET=882309744858-versifi-tickdata-ap-northeast-1/apne1 \
+    USER=TRADING-77ff56d2a46a413b91cb5d0772848feb \
+    $BUILD_DIR/bin/hft \
+    --date $1 \
+    --config $2 \
+    --model_config $3
+}
+
+freetmp() {
+cd /tmp && find . -name "TRADING*" -type d -mmin +300 | xargs sudo rm -rf
 }
