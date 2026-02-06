@@ -1,5 +1,13 @@
+findcpp() {
+  find . \( -name "*.cpp" -o -name "*.h" \) -exec grep -Hn "$1" {} \;
+}
+
+findpy() {
+  find . \( -name "*.py" -o -name "*.ipynb" \) -exec grep -Hn "$1" {} \;
+}
+
 get_git_branch() {
-    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
 
 weekday() {
@@ -7,123 +15,192 @@ weekday() {
 }
 
 ltf() {
-    last_file=`ls -rt *.log | tail -n 1`
-    echo $ tail -f $last_file
-    tail -f $last_file
-}
-
-tv() {
-    if tmux has-session -t my-session > /dev/null 2>&1; then
-        echo tmux attaching to my-session
-        tmux attach -d -t my-session
-    
-    else
-        echo tmux creating my-session
-        tmux new-session -d -s my-session -c "$HOME"
-    
-        # 1
-        tmux rename-window -t my-session:1 htop
-        tmux split-window -v -t htop
-        tmux split-window -h -t htop.2
-
-        tmux send-keys -t htop.1 'htop' C-m
-        tmux send-keys -t htop.2 'vmon' C-m
-        tmux send-keys -t htop.3 'imon' C-m
-    
-        # 2
-        tmux new-window -n code -c "/fsx/jlee/repos/execution-monorepo"
-        tmux split-window -v -t code -c "/fsx/jlee/repos/quant-research"
-        tmux send-keys -t code.1 'vim -c "NERDTree"' C-m
-        tmux send-keys -t code.2 'vim -c "NERDTree"' C-m
-    
-        # 3
-        tmux new-window -n sim -c "/fsx/jlee/simbase"
-        tmux split-window -h -t sim -c "/fsx/jlee/simbase"
-    
-        # 4
-        tmux new-window -n capture -c "/fsx/jlee/fitbase"
-        tmux split-window -h -t capture -c "/fsx/jlee/fitbase"
-
-        # 5
-        tmux new-window -n config -c "/fsx/jlee/repos/quant-research/packages/configs"
-        tmux split-window -h -t config -c "/fsx/jlee/repos/quant-research/packages/configs"
-
-        # 6
-        tmux new-window -n s3 -c "/fsx/jlee/s3"
-        tmux split-window -h -t s3
-
-        # 7
-        tmux new-window -n report -c "/fsx/jlee/scorebase"
-        tmux split-window -h -t report
-
-        #8
-        tmux new-window -n staging
-
-        #9
-        tmux new-window -n nexyst
-
-        #10
-        tmux new-window -n temple-okx
-    
-        #
-        tmux select-window -t code.1
-        tmux select-pane -t 1
-        tmux -2 attach-session -t my-session
-    fi
-}
-
-vmon() {
-    while true; do cat /fsx/jlee/cronlog/mon/daily_volume.txt; echo ""; sleep 600; done
-}
-
-imon() {
-    while true; do cat /fsx/jlee/cronlog/mon/live_volume.txt; echo ""; sleep 60; done
-}
-
-debug_capture() {
-BIN_DIR=/fsx/jlee/repos/execution-monorepo/debug
-LD_LIBRARY_PATH=$BIN_DIR/lib \
-    MTS_TARDIS_NORM_BUCKET=882309744858-versifi-tickdata-ap-northeast-1/apne1 \
-    USER=TRADING-87ff56d2a46a413b91cb5d0772848feb \
-    gdb --args \
-    $BIN_DIR/bin/sampler \
-    --date $1 \
-    --config $2
-}
-
-run_capture() {
-BIN_DIR=/fsx/jlee/repos/execution-monorepo/build
-LD_LIBRARY_PATH=$BIN_DIR/lib \
-    MTS_TARDIS_NORM_BUCKET=882309744858-versifi-tickdata-ap-northeast-1/apne1 \
-    USER=TRADING-87ff56d2a46a413b91cb5d0772848feb \
-    $BIN_DIR/bin/sampler \
-    --date $1 \
-    --config $2
-}
-
-debug_trading() {
-BUILD_DIR=/fsx/jlee/repos/execution-monorepo/debug
-LD_LIBRARY_PATH=$BDUILD_DIR/lib \
-    MTS_TARDIS_NORM_BUCKET=882309744858-versifi-tickdata-ap-northeast-1/apne1 \
-    USER=TRADING-77ff56d2a46a413b91cb5d0772848feb \
-    gdb --args \
-    $BUILD_DIR/bin/hft \
-    --date $1 \
-    --config $2 \
-    --model_config $3
-}
-
-run_trading() {
-BUILD_DIR=/fsx/jlee/repos/execution-monorepo/build
-LD_LIBRARY_PATH=$BDUILD_DIR/lib \
-    MTS_TARDIS_NORM_BUCKET=882309744858-versifi-tickdata-ap-northeast-1/apne1 \
-    USER=TRADING-77ff56d2a46a413b91cb5d0772848feb \
-    $BUILD_DIR/bin/hft \
-    --date $1 \
-    --config $2 \
-    --model_config $3
+  last_file=`ls -rt *.log | tail -n 1`
+  echo $ tail -f $last_file
+  tail -f $last_file
 }
 
 freetmp() {
-cd /tmp && find . -name "TRADING*" -type d -mmin +300 | xargs sudo rm -rf
+  cd /tmp && find . -name "TRADING*" -type d -mmin +300 | xargs sudo rm -rf
 }
+
+function header() {
+  head -1 $1 | awk 'BEGIN{RS=","};{print NR, $0}'
+}
+
+function show_daily_report() {
+  for f in $@; do echo -n $f " "; head -2 $f | tail -1 | awk -F, '{print $2, $5, $7}'; done
+}
+
+function md2pdf() {
+  pandoc --pdf-engine=pdfroff $1 -o $2
+}
+
+function every30sec() {
+  while true; do $1; sleep 30; done
+}
+
+function header() {
+  head -1 $1 | awk 'BEGIN{RS=","};{print NR, $0}'
+}
+
+function duext() {
+  find . -type f -printf "%s %f\n" | awk '{
+      ext = "";
+      if ($2 ~ /\./) {
+          ext = substr($2, match($2, /\.[^.]+$/) + 1);
+      } else {
+          ext = "no_extension";
+      }
+      size[ext] += $1;
+  } END {
+      for (e in size) {
+          print size[e] , e
+      }
+  }' | sort -k1nr | numfmt --field=1 --to=iec --suffix=B | awk '{printf("%8s  %s\n", $1, $2)}'
+}
+
+function show_old_state_files() {
+  find . -wholename "*/state/*csv" -type f -mtime +7
+}
+
+function delete_old_state_files() {
+  sudo find . -wholename "*/state/*csv" -type f -mtime +7 -delete
+}
+
+function _show_state() {
+  PAT=$1
+  STATE=$2
+  rm /tmp/pst1 /tmp/pst2 > /dev/null 2>&1
+  touch /tmp/pst1 /tmp/pst2
+  rows=`grep $PAT $STATE | awk '{gsub(/ /, "_"); print}'`
+  for row in $rows; do
+    echo "------" >> /tmp/pst1
+    echo "------" >> /tmp/pst2
+    grep time $STATE | head -n 1 | awk 'BEGIN{RS=","};{print $0}' >> /tmp/pst1
+    echo $row | awk 'BEGIN{RS=","};{print $0}' >> /tmp/pst2
+  done
+  shift
+  shift
+  CMD1="grep -e ------"
+  for arg in "$@"; do
+    CMD1="$CMD1 -e $arg"
+  done
+  paste /tmp/pst1 /tmp/pst2 | $CMD1 | awk '{printf("%22s%22s\n", $1, $2)}'
+}
+
+function show_state() {
+  PAT=$1
+  STATE=$2
+  shift
+  shift
+  _show_state $PAT $STATE time_str req_id req_size req_canceled req_size_remaining min_size orders_allowed ready_for_request order_size "$@"
+}
+function count_new {
+  ORDFILE=$1
+  grep NEW $ORDFILE | awk -F"[ ,\"]" '{sym=$72};{!seen[sym]++};END{for(key in seen){print key, seen[key]}}'
+}
+function count_fill {
+  ORDFILE=$1
+  grep FILL $ORDFILE | awk -F"[ ,\"]" '{sym=$79};{!seen[sym]++};END{for(key in seen){print key, seen[key]}}'
+}
+function substr_len {
+  N=2
+  if [[ "$1" == "min" ]]; then
+    N=5
+  else
+    if [[ "$1" == "sec" ]]; then
+      N=8
+    else
+      if [[ "$1" == "10s" ]]; then
+        N=7
+      fi
+    fi
+  fi
+  return $((N))
+}
+function orders_count_by {
+  substr_len $1
+  N=$?
+  shift
+
+  cat $@ | awk '{print substr($2,1,'$N')}' | sort | uniq -c | awk '{print $2, 0}' > /tmp/count_time
+
+  join -e 0 -a1 -a2 -o auto <(cat /tmp/count_time) \
+    <(cat $@ | grep NEW | grep order_action | awk '{print substr($2,1,'$N')}' | sort | uniq -c | awk '{print $2, $1}') \
+  | awk '{print $1, $NF}' > /tmp/count_new
+
+  join -e 0 -a1 -a2 -o auto <(cat /tmp/count_time) \
+    <(cat $@ | grep REJECTED | awk '{print substr($2,1,'$N')}' | sort | uniq -c | awk '{print $2, $1}') \
+  | awk '{print $1, $NF}' > /tmp/count_reject
+
+  join -e 0 -a1 -a2 -o auto <(cat /tmp/count_time) \
+    <(cat $@ | grep ACKED | awk '{print substr($2,1,'$N')}' | sort | uniq -c | awk '{print $2, $1}') \
+  | awk '{print $1, $NF}' > /tmp/count_acked
+
+  join -e 0 -a1 -a2 -o auto <(cat /tmp/count_time) \
+    <(cat $@ | grep CANCELED | awk '{print substr($2,1,'$N')}' | sort | uniq -c | awk '{print $2, $1}') \
+  | awk '{print $1, $NF}' > /tmp/count_canceled
+
+  join -e 0 -a1 -a2 -o auto <(cat /tmp/count_time) \
+    <(cat $@ | grep FILL | awk '{print substr($2,1,'$N')}' | sort | uniq -c | awk '{print $2, $1}') \
+  | awk '{print $1, $NF}' > /tmp/count_fill
+
+  echo "TIME  NEW  REJECTED ACKED CANCELED FILL"
+  join -e 0 -a1 -a2 -o auto \
+    <(join -e 0 -a1 -a2 -o auto \
+      <(join -e 0 -a1 -a2 -o auto \
+        <(join -e 0 -a1 -a2 -o auto \
+          <(join -e 0 -a1 -a2 -o auto \
+            <(cat /tmp/count_time) \
+            <(cat /tmp/count_new)) \
+          <(cat /tmp/count_reject)) \
+        <(cat /tmp/count_acked)) \
+      <(cat /tmp/count_canceled)) \
+    <(cat /tmp/count_fill) \
+  | awk '{printf("%s %6d %6d %6d %6d %6d\n", $1, $3, $4, $5, $6, $7)}'
+}
+function orders_count_type_by {
+  substr_len $2
+  N=$?
+
+  PAT=$1
+  shift
+  shift
+
+  echo "TIME  $PAT"
+  cat $@ | grep $PAT | awk '{print substr($2,1,'$N')}' | sort | uniq -c | awk '{print $2, $1}'
+}
+function orders_load_by {
+  orders_count_by $@ | awk '{if($1=="TIME") {print $0, "TOTAL_LOAD"} else {print $0, $2 + $5 + $6/2}}'
+}
+function count_fill_persister {
+  PERSLOG=$1
+  grep FILL $PERSLOG | grep exchange_time | awk -F"[ \":,]" '{print int(substr($29, 1, 10)%(24*3600)/60/60)}' | sort -n | uniq -c
+}
+function flash_cancel {
+  OPLOG=$1
+  grep -a ACKED $OPLOG | awk -F"[ \",:.]" '{print $1, $2, $3, $4, $5, "ACKED", $20, $128}' > ~/temp1.txt
+  grep -a  Enqueue $OPLOG | grep -a CANCEL | awk -F"[ \",:.]" '{print $1, $2, $3, $4, $5, "CANCEL", $16}' > ~/temp2.txt
+  cat ~/temp1.txt ~/temp2.txt | sort > ~/temp3.txt
+  rm ~/temp1.txt ~/temp2.txt
+  cat ~/temp3.txt | awk '{if($6=="ACKED"){{t0=$5};{clid=$7};{sym=$8}}};{if($6=="CANCEL"&&$7==clid&&$5-t0<100){print sym, $2, $5-t0}}' | awk '{print $1, $2}' | sort | uniq -c | sort -n -k1,1 | awk '$1>10{print $2"h", $3, $1}'
+}
+function scroll {
+  f="$1"
+  lines_per_page=65
+  delay=1
+  total_lines=$(wc -l < $f)
+  current_line=1
+  while [ "$current_line" -le "$total_lines" ]; do
+    clear
+    echo ">>>" $f $current_line
+    echo
+
+    page_end=$((current_line + lines_per_page - 1))
+    head -n $page_end $f | tail -n $lines_per_page
+    current_line=$((current_line + lines_per_page))
+    sleep $delay
+  done
+}
+export -f scroll

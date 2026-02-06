@@ -1,0 +1,109 @@
+tv() {
+  if tmux has-session -t my-session > /dev/null 2>&1; then
+    echo tmux attaching to my-session
+    tmux attach -d -t my-session
+
+  else
+    echo tmux creating my-session
+    tmux new-session -d -s my-session -c "$HOME"
+
+    # 1
+    tmux rename-window -t my-session:1 htop
+    tmux split-window -v -t htop
+    tmux split-window -h -t htop.2
+
+    tmux send-keys -t htop.1 'htop' C-m
+    tmux send-keys -t htop.2 'top' C-m
+    tmux send-keys -t htop.3
+
+    # 2
+    tmux new-window -n code -c "/fsx/jlee/repos/execution-monorepo"
+    tmux split-window -v -t code -c "/fsx/jlee/repos/quant-research"
+    tmux send-keys -t code.1 'vim -c "NERDTree"' C-m
+    tmux send-keys -t code.2 'vim -c "NERDTree"' C-m
+
+    # 3
+    tmux new-window -n sim -c "/fsx/jlee/simbase"
+    tmux split-window -h -t sim -c "/fsx/jlee/simbase"
+
+    # 4
+    tmux new-window -n capture -c "/fsx/jlee/fitbase"
+    tmux split-window -h -t capture -c "/fsx/jlee/fitbase"
+
+    # 5
+    tmux new-window -n config -c "/fsx/jlee/repos/quant-research/packages/configs"
+    tmux split-window -h -t config -c "/fsx/jlee/repos/quant-research/packages/configs"
+
+    # 6
+    tmux new-window -n s3 -c "/fsx/jlee/s3"
+    tmux split-window -h -t s3
+
+    # 7
+    tmux new-window -n report -c "/fsx/jlee/scorebase/prod"
+    tmux split-window -h -t report -c "/fsx/jlee/scorebase"
+
+    #8
+    tmux new-window -n staging
+
+    #9
+    tmux new-window -n nexyst
+
+    #10
+    tmux new-window -n temple-okx
+
+    #
+    tmux select-window -t code.1
+    tmux select-pane -t 1
+    tmux -2 attach-session -t my-session
+  fi
+}
+
+debug_capture() {
+BIN_DIR=/fsx/jlee/repos/execution-monorepo/debug
+LD_LIBRARY_PATH=$BIN_DIR/lib \
+  MTS_TARDIS_NORM_BUCKET=882309744858-versifi-tickdata-ap-northeast-1/apne1 \
+  USER=TRADING-87ff56d2a46a413b91cb5d0772848feb \
+  gdb --args \
+  $BIN_DIR/bin/sampler \
+  --date $1 \
+  --config $2
+}
+
+run_capture() {
+BIN_DIR=/fsx/jlee/repos/execution-monorepo/build
+LD_LIBRARY_PATH=$BIN_DIR/lib \
+  MTS_TARDIS_NORM_BUCKET=882309744858-versifi-tickdata-ap-northeast-1/apne1 \
+  USER=TRADING-87ff56d2a46a413b91cb5d0772848feb \
+  $BIN_DIR/bin/sampler \
+  --date $1 \
+  --config $2
+}
+
+debug_trading() {
+BUILD_DIR=/fsx/jlee/repos/em_${1}/execution-monorepo/debug
+LD_LIBRARY_PATH=$BDUILD_DIR/lib \
+  MTS_TARDIS_NORM_BUCKET=882309744858-versifi-tickdata-ap-northeast-1/apne1 \
+  USER=TRADING-77ff56d2a46a413b91cb5d0772848feb \
+  gdb --args \
+  $BUILD_DIR/bin/hft \
+  --date $2 \
+  --config $3 \
+  --model_config $4
+}
+
+run_trading() {
+BUILD_DIR=/fsx/jlee/repos/em_${1}/execution-monorepo/build
+LD_LIBRARY_PATH=$BDUILD_DIR/lib \
+  MTS_TARDIS_NORM_BUCKET=882309744858-versifi-tickdata-ap-northeast-1/apne1 \
+  USER=TRADING-77ff56d2a46a413b91cb5d0772848feb \
+  $BUILD_DIR/bin/hft \
+  --date $2 \
+  --config $3 \
+  --model_config $4
+}
+
+function model2s3() {
+  SUBDIR="${PWD##*/}"
+  for f in `ls model*json`; do aws s3 cp $f s3://versifi-ather-temp-uploads/$SUBDIR/; done | awk '{print $NF}'
+}
+

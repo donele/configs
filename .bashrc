@@ -12,7 +12,7 @@ elif [ -d "$HOME/repos/configs" ]; then
     DOT_DIR="$HOME/repos/configs"
 fi
 
-for DOT_FILE in "$DOT_DIR"/system/.{exports,function,alias,prompt,pyenv}; do
+for DOT_FILE in "$DOT_DIR"/system/.{exports,function,function_vf,alias,prompt,pyenv}; do
     . "$DOT_FILE"
 done
 
