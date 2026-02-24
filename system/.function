@@ -24,8 +24,49 @@ freetmp() {
   cd /tmp && find . -name "TRADING*" -type d -mmin +300 | xargs sudo rm -rf
 }
 
+list_state() {
+CSVFILE=$1
+
+shift
+COLS=""
+for arg in "$@"; do
+    COLS="$COLS,$arg"
+done
+
+awk -v cols=$COLS '
+BEGIN {
+    FS=OFS=","  # CSV delimiter
+    split(cols, wanted, ",")  # Split requested column names into array
+}
+NR==1 {
+    # Map header names to their column positions
+    for (i = 1; i <= NF; i++) {
+        header[$i] = i
+    }
+    # Build list of column indexes to print
+    for (j in wanted) {
+        colname = wanted[j]
+        if (colname in header) {
+            idx[++count] = header[colname]
+        } else {
+            # Warn if column not found
+            printf("Warning: column \"%s\" not found in header\n", colname) > "/dev/stderr"
+        }
+    }
+}
+NR >= 1 {
+    # Print only the selected columns
+    out = ""
+    for (k = 1; k <= count; k++) {
+        out = out (k > 1 ? OFS : "") $idx[k]
+    }
+    print out
+}
+' $CSVFILE
+}
+
 function header() {
-  head -1 $1 | awk 'BEGIN{RS=","};{print NR, $0}'
+  head -1 $1 | awk 'BEGIN{RS=","};{print NR, $0}' | pr -tw140 -6
 }
 
 function show_daily_report() {
@@ -38,10 +79,6 @@ function md2pdf() {
 
 function every30sec() {
   while true; do $1; sleep 30; done
-}
-
-function header() {
-  head -1 $1 | awk 'BEGIN{RS=","};{print NR, $0}'
 }
 
 function duext() {
