@@ -241,3 +241,30 @@ function scroll {
   done
 }
 export -f scroll
+
+# Find and Replace in file(s).
+function myrep {
+if (( $# == 2 )); then
+	if grep $2 $1 > /dev/null 2>&1; then
+		echo "========= Pattern $2 found in files: =========="
+		grep $2 $1
+	else
+		echo "Pattern $2 was not found in $1."
+	fi
+elif (( $# == 3 )); then
+	for f in `grep -l $2 $1 2>/dev/null | grep -v repTry`; do echo; echo "========== $f =========="; sed 's/'"$2"'/'"$3"'/g' $f > ${f}.repTry; diff $f ${f}.repTry; rm ${f}.repTry; done
+	echo
+	echo -n "Execute the change? [y/N]: "
+	read answer
+	if [[ "x$answer" == "xy" ]]; then
+		echo
+		echo "Pattern $2 was replaced by $3 in files:"
+		for f in `grep -l $2 $1 2>/dev/null | grep -v repTry`; do echo $f; sed 's/'"$2"'/'"$3"'/g' $f > ${f}.repTry; mv ${f}.repTry $f; done
+	else
+		echo "Aborted."
+	fi
+else
+	echo "Usage: myrep <file> <pattern>"
+	echo "       myrep <file> <pattern> <pattern2>"
+fi
+}
