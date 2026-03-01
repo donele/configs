@@ -223,24 +223,6 @@ function flash_cancel {
   rm ~/temp1.txt ~/temp2.txt
   cat ~/temp3.txt | awk '{if($6=="ACKED"){{t0=$5};{clid=$7};{sym=$8}}};{if($6=="CANCEL"&&$7==clid&&$5-t0<100){print sym, $2, $5-t0}}' | awk '{print $1, $2}' | sort | uniq -c | sort -n -k1,1 | awk '$1>10{print $2"h", $3, $1}'
 }
-function scroll {
-  f="$1"
-  lines_per_page=65
-  delay=1
-  total_lines=$(wc -l < $f)
-  current_line=1
-  while [ "$current_line" -le "$total_lines" ]; do
-    clear
-    echo ">>>" $f $current_line
-    echo
-
-    page_end=$((current_line + lines_per_page - 1))
-    head -n $page_end $f | tail -n $lines_per_page
-    current_line=$((current_line + lines_per_page))
-    sleep $delay
-  done
-}
-export -f scroll
 
 # Find and Replace in file(s).
 function myrep {
