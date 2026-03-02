@@ -42,7 +42,7 @@ autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "norm
 " =========================
 nnoremap <leader>n :NERDTreeToggle<CR>
 let NERDTreeShowHidden=1
-autocmd VimEnter * if argc() == 0 | NERDTree | endif
+autocmd VimEnter * NERDTree
 autocmd BufEnter * if winnr('$') == 1 && exists("b:NERDTree") | quit | endif
 
 " =========================
