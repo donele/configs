@@ -1,5 +1,9 @@
 set nocompatible              " be iMproved, required
 
+" Leader.
+let mapleader =" "
+
+
 " =========================
 " Plugin Manager
 "   $ curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -40,10 +44,10 @@ autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "norm
 " =========================
 " NERDTree Settings
 " =========================
-nnoremap <leader>n :NERDTreeToggle<CR>
-let NERDTreeShowHidden=1
-autocmd VimEnter * NERDTree
+autocmd VimEnter * if argc() == 0 | NERDTree | endif
 autocmd BufEnter * if winnr('$') == 1 && exists("b:NERDTree") | quit | endif
+map <leader>n :NERDTreeToggle<CR>
+let NERDTreeShowHidden=1
 
 " =========================
 " FZF Keybindings
@@ -73,9 +77,6 @@ nnoremap <leader>gs :Git<CR>
 nnoremap <leader>gd :Gdiffsplit<CR>
 nnoremap <leader>gb :Git blame<CR>
 nnoremap <leader>gl :Git log<CR>
-
-" Leader.
-let mapleader =" "
 
 " Prefer vertical diffsplit
 set diffopt=vertical
