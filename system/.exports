@@ -1,12 +1,14 @@
 set -o vi
 export EDITOR=vim
 
-if env | grep SHELL | grep bash > /dev/null; then
+if [ -n "$BASH_VERSION" ]; then
   [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-elif env | grep SHELL | grep zsh > /dev/null; then
+elif [ -n "$ZSH_VERSION" ]; then
   [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+fi
 
 if [[ -v WSLENV ]]; then
   export PATH=/usr/local/gcc-13/bin:$PATH
   export LD_LIBRARY_PATH=/usr/local/gcc-13/lib64:$LD_LIBRARY_PATH
 fi
+
