@@ -106,4 +106,3 @@ function model2s3() {
   SUBDIR="${PWD##*/}"
   for f in `ls model*json`; do aws s3 cp $f s3://versifi-ather-temp-uploads/$SUBDIR/; done | awk '{print $NF}'
 }
-

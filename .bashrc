@@ -15,5 +15,3 @@ fi
 for DOT_FILE in "$DOT_DIR"/system/.{exports,function,function_vf,alias,prompt,pyenv}; do
     . "$DOT_FILE"
 done
-
-set -o vi
