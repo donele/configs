@@ -5,4 +5,3 @@ if [ -n "$BASH_VERSION" ]; then
 
   export PS1="\[\e[0;36m\][\$(weekday) \t \u@\h:\w]\[\e[m\]\$(get_git_branch)\[\e[m\]\n$ "
 fi
-

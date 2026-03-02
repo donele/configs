@@ -11,4 +11,3 @@ if [ -n "$ZSH_VERSION" ]; then
   setopt PROMPT_SUBST
   PROMPT="%F{green}[$(weekday) %* %n@%m %0~]%f ${vcs_info_msg_0_}${NEWLINE}%# "
 fi
-
