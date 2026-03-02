@@ -46,13 +46,6 @@ let NERDTreeShowHidden=1
 autocmd VimEnter * if argc() == 0 | NERDTree | endif
 autocmd BufEnter * if winnr('$') == 1 && exists("b:NERDTree") | quit | endif
 
-" Auto open if no file
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter *
-      \ if argc() == 0 && !exists("s:std_in") |
-    \   NERDTree |
-    \ endif
-
 " =========================
 " FZF Keybindings
 " =========================
