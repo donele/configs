@@ -73,6 +73,7 @@ set statusline+=\ %h%m%r      " flags
 set statusline+=\ %=          " right align
 set statusline+=%{fugitive#statusline()}
 set statusline+=\ %l:%c       " line:col
+set statusline+=\ %p%%        " percentage
 nnoremap <leader>gs :Git<CR>
 nnoremap <leader>gd :Gdiffsplit<CR>
 nnoremap <leader>gb :Git blame<CR>
@@ -107,14 +108,14 @@ syntax on
 "----------------------------------------------------------------------------
 
 " Colors
-colo koehler
+colo pablo
 nnoremap <leader>1 :colo ron<cr>
-nnoremap <leader>2 :colo koehler<cr>
-nnoremap <leader>3 :colo industry<cr>
-nnoremap <leader>4 :colo pablo<cr>
-nnoremap <leader>5 :colo torte<cr>
-nnoremap <leader>6 :colo wildcharm<cr>
-nnoremap <leader>7 :colo zaibatsu<cr>
+nnoremap <leader>2 :colo pablo<cr>
+nnoremap <leader>3 :colo default<cr>
+nnoremap <leader>4 :colo delek<cr>
+nnoremap <leader>5 :colo desert<cr>
+nnoremap <leader>6 :colo elflord<cr>
+nnoremap <leader>7 :colo slate<cr>
 
 " Quick write.
 nnoremap <leader>p :set paste<cr>

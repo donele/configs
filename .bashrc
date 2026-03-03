@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Source global definitions
 if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
@@ -12,6 +10,8 @@ elif [ -d "$HOME/repos/configs" ]; then
     DOT_DIR="$HOME/repos/configs"
 fi
 
-for DOT_FILE in "$DOT_DIR"/system/.{exports,function,function_vf,alias,prompt_bash,pyenv}; do
+for DOT_FILE in "$DOT_DIR"/system/.{exports,function,function_122,alias,prompt_bash,pyenv}; do
     . "$DOT_FILE"
 done
+
+export PATH=${PATH}:${DOT_DIR}/python
