@@ -1,0 +1,13 @@
+if [ -n "$ZSH_VERSION" ]; then
+  # %n: $USERNAME
+  # %m: hostname
+  # %f: stop using foreground color
+  # %#: # if previleged else %
+
+  autoload -Uz vcs_info
+  precmd() { vcs_info }
+  zstyle ':vcs_info:git:*' formats '(%b)'
+  NEWLINE=$'\n'
+  setopt PROMPT_SUBST
+  PROMPT="%F{green}[$(weekday) %* %n@%m %0~]%f ${vcs_info_msg_0_}${NEWLINE}%# "
+fi

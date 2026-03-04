@@ -13,8 +13,10 @@ alias -- -="cd -"
 alias cdr="cd /fsx/jlee/repos"
 alias cds="cd /fsx/jlee/simbase"
 alias cdf="cd /fsx/jlee/fitbase"
-alias cdp="cd /fsx/jlee/pynb"
+alias cdo="cd /fsx/jlee/scorebase"
 alias cdc="cd /fsx/jlee/repos/quant-research/packages/configs"
+alias cdw="cd /fsx/jlee/repos/quant-research/workspace"
+alias cd?="echo [r]epos [s]imbase [f]itbase sc[o]rebase [c]onfigs [w]orkspace"
 
 alias lt='ls -lrt'
 alias ll='ls -al'

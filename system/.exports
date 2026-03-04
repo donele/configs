@@ -1,0 +1,18 @@
+set -o vi
+export EDITOR=vim
+
+if [ "$CODER" == "true" ] || [ "$HOSTNAME" == "aws01-dev-ray01" ] || [ -v WSLENV ]; then
+  export VIM_CPP_INDEXT=2
+fi
+
+if [ -n "$BASH_VERSION" ]; then
+  [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+elif [ -n "$ZSH_VERSION" ]; then
+  [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+fi
+
+if [[ -v WSLENV ]]; then
+  export PATH=/usr/local/gcc-13/bin:$PATH
+  export LD_LIBRARY_PATH=/usr/local/gcc-13/lib64:$LD_LIBRARY_PATH
+fi
+
