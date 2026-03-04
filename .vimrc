@@ -1,8 +1,5 @@
 set nocompatible              " be iMproved, required
-
-" Leader.
 let mapleader =" "
-
 
 " =========================
 " Plugin Manager
@@ -26,14 +23,27 @@ filetype plugin indent on
 "   tabstop decide how to display tabs
 "   shiftwidth control indentation behavior
 " =========================
-augroup MyIndentSettings
+augroup MyPythonIndent
   autocmd!
-  autocmd FileType cpp setlocal shiftwidth=2 softtabstop=-1 tabstop=2
   autocmd FileType python setlocal shiftwidth=4 softtabstop=-1 tabstop=4
 augroup END
+
+if exists('$VIM_CPP_INDENT')
+  let g:cpp_indent = str2nr($VIM_CPP_INDENT)
+else
+  let g:cpp_indent = 4
+endif
+
+augroup MyCppIndent
+  autocmd!
+  autocmd FileType cpp execute 'setlocal shiftwidth='.g:cpp_indent
+        \ . ' softtabstop='.g:cpp_indent
+        \ . ' tabstop='.g:cpp_indent
+augroup END
+
 set expandtab " display spaces instead of '\t'
 set hidden " allow unsaved buffers in background
-set nowrap
+
 " When editing a file, always jump to the last known cursor position.
 " Don't do it when the position is invalid or when inside an event handler
 " (happens when dropping a file on gvim).
@@ -45,7 +55,7 @@ autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "norm
 " NERDTree Settings
 " =========================
 autocmd VimEnter * if argc() == 0 | NERDTree | endif
-autocmd BufEnter * if winnr('$') == 1 && exists("b:NERDTree") | quit | endif
+" autocmd BufEnter * if winnr('$') == 1 && exists("b:NERDTree") | quit | endif
 map <leader>n :NERDTreeToggle<CR>
 let NERDTreeShowHidden=1
 
@@ -101,7 +111,6 @@ if !exists(":DiffOrig")
 endif
 
 syntax on
-
 
 "----------------------------------------------------------------------------
 " Mappings ------------------------------------------------------------------

@@ -1,6 +1,10 @@
 set -o vi
 export EDITOR=vim
 
+if [ "$CODER" == "true" ] || [ "$HOSTNAME" == "aws01-dev-ray01" ] || [ -v WSLENV ]; then
+  export VIM_CPP_INDEXT=2
+fi
+
 if [ -n "$BASH_VERSION" ]; then
   [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 elif [ -n "$ZSH_VERSION" ]; then
