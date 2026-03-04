@@ -30,10 +30,16 @@ alias gl='git log'
 
 alias py='python'
 alias pf='sudo perf stat -B -e cache-references,cache-misses,cycles,instructions,branches,branch-misses,page-faults,cpu-migrations,context-switches'
-alias cmake_debug="cmake -DCMAKE_BUILD_TYPE=Debug"
 alias mergepdf='gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=_merged.pdf'
+
+alias br='cmake --preset conan-release; cmake --build ./build -j 16'
+alias bd='cmake --preset conan-debug; cmake --build ./debug -j 16'
+alias cmake_debug="cmake -DCMAKE_BUILD_TYPE=Debug"
+
 alias path='echo -e ${PATH//:/\\n}'
 
 alias rbackfill='for d in `ls -d w*`; do cd $d && (py ../backfill.py); cd ..; done'
 alias rana='for d in `ls -d w*`; do cd $d && (py ../ana.py&); cd ..; done'
 alias lt1='ls -lrt w*/log/or* | tail -1'
+
+alias idea="/opt/idea-IC-242.21829.142/bin/idea"
