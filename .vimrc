@@ -54,7 +54,7 @@ autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "norm
 " =========================
 " NERDTree Settings
 " =========================
-autocmd VimEnter * if argc() == 0 | NERDTree | endif
+" autocmd VimEnter * if argc() == 0 | NERDTree | endif
 " autocmd BufEnter * if winnr('$') == 1 && exists("b:NERDTree") | quit | endif
 map <leader>n :NERDTreeToggle<CR>
 let NERDTreeShowHidden=1
@@ -63,6 +63,16 @@ let NERDTreeShowHidden=1
 " FZF Keybindings
 " =========================
 nnoremap <C-p> :Files<CR>
+nnoremap <leader>D :Gvdiffsplit HEAD<CR>
+nnoremap <leader>DD :Gvdiffsplit HEAD~<CR>
+nnoremap <leader>D2 :Gvdiffsplit HEAD~2<CR>
+nnoremap <leader>D3 :Gvdiffsplit HEAD~3<CR>
+nnoremap <leader>D4 :Gvdiffsplit HEAD~4<CR>
+nnoremap <leader>D5 :Gvdiffsplit HEAD~5<CR>
+nnoremap <leader>D6 :Gvdiffsplit HEAD~6<CR>
+nnoremap <leader>D7 :Gvdiffsplit HEAD~7<CR>
+nnoremap <leader>D8 :Gvdiffsplit HEAD~8<CR>
+nnoremap <leader>D9 :Gvdiffsplit HEAD~9<CR>
 nnoremap <leader>g :GFiles?<CR>
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>f :Rg<CR>
@@ -127,6 +137,8 @@ nnoremap <leader>6 :colo elflord<cr>
 nnoremap <leader>7 :colo slate<cr>
 
 " Quick write.
+nnoremap <leader>w :w<cr>
+nnoremap <leader>q :q<cr>
 nnoremap <leader>p :set paste<cr>
 nnoremap <leader>P :set nopaste<cr>
 nnoremap <leader>h 2gt
@@ -137,7 +149,7 @@ nnoremap <leader>= =a{
 nnoremap <leader>s :source ~/.vimrc<cr>
 
 " Dos format
-nnoremap <leader>d :% s/$/\r/<cr>
+nnoremap <leader>d :%s/$/\r/<cr>
 
 " Disable F1
 nmap <F1> <nop>

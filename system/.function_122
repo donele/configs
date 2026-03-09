@@ -62,6 +62,103 @@ tv() {
   fi
 }
 
+tt() {
+  local SDIR="/home/jlee/s3"
+  local TOPDIR="/home/jlee"
+  local EMDIR="$TOPDIR/repos/em/em-development"
+  local QRDIR="$TOPDIR/repos/qr/qr-wsl"
+  local CONFIGDIR="$TOPDIR/repos/qr/qr-wsl/packages/configs"
+  local SIMWORKDIR="$TOPDIR/repos/qr/qr-wsl/workspace/sim"
+  local SIMDIR="$TOPDIR/simbase"
+  local FITWORKDIR="$TOPDIR/repos/qr/qr-wsl/workspace/fit"
+  local FITDIR="$TOPDIR/fitbase"
+  local REPWORKDIR="$TOPDIR/repos/qr/qr-wsl/workspace/report"
+  local REPDIR="$TOPDIR/scorebase"
+  local SESSION="my-session"
+  local QRSTART="$HOME"
+  local EMSTART="$HOME"
+  local SIMWORKSTART="$HOME"
+  local SIMSTART="$HOME"
+  local FITWORKSTART="$HOME"
+  local FITSTART="$HOME"
+  local CONFIGSTART="$HOME"
+  local AWSSTART="$HOME"
+  local REPWORKSTART="$HOME"
+  local REPSTART="$HOME"
+  local htop_bottom_pane
+  local htop_window_id
+
+  if [ -d "$TOPDIR" ]; then
+    QRSTART="$QRDIR"
+    EMSTART="$EMDIR"
+    SIMWORKSTART="$SIMWORKDIR"
+    SIMSTART="$SIMDIR"
+    FITWORKSTART="$FITWORKDIR"
+    FITSTART="$FITDIR"
+    CONFIGSTART="$CONFIGDIR"
+    AWSSTART="$SDIR"
+    REPWORKSTART="$REPWORKDIR"
+    REPSTART="$REPDIR"
+  fi
+
+  if tmux has-session -t "$SESSION" > /dev/null 2>&1; then
+    echo "tmux attaching to $SESSION"
+    tmux attach-session -d -t "$SESSION"
+    return
+  fi
+
+  echo "tmux creating $SESSION"
+  htop_window_id="$(tmux new-session -d -s "$SESSION" -c "$HOME" -P -F '#{window_id}')"
+
+  # 1
+  tmux rename-window -t "$htop_window_id" htop
+  htop_pane_id="$(tmux display-message -pt "$htop_window_id" '#{pane_id}')"
+  tmux send-keys -t "$htop_pane_id" 'htop' C-m
+  htop_bottom_pane="$(tmux split-window -v -p 70 -t "$htop_window_id" -P -F '#{pane_id}')"
+  tmux split-window -h -t "$htop_bottom_pane"
+
+  # 2
+  tmux new-window -t "$SESSION" -n code -c "$QRSTART"
+  tmux split-window -h -t "$SESSION:code" -c "$EMSTART"
+
+  # 3
+  tmux new-window -t "$SESSION" -n sim -c "$SIMWORKSTART"
+  tmux split-window -h -t "$SESSION:sim" -c "$SIMSTART"
+
+  # 4
+  tmux new-window -t "$SESSION" -n fit -c "$FITWORKSTART"
+  tmux split-window -h -t "$SESSION:fit" -c "$FITSTART"
+
+  # 5
+  tmux new-window -t "$SESSION" -n config -c "$CONFIGSTART"
+  tmux split-window -h -t "$SESSION:config" -c "$CONFIGSTART"
+
+  # 6
+  tmux new-window -t "$SESSION" -n aws -c "$AWSSTART"
+  tmux split-window -h -t "$SESSION:aws" -c "$AWSSTART"
+
+  # 7
+  tmux new-window -t "$SESSION" -n report -c "$REPWORKSTART"
+  tmux split-window -h -t "$SESSION:report" -c "$REPSTART"
+
+  # 8
+  tmux new-window -t "$SESSION" -n doc -c "$HOME/doc"
+
+  # 9
+  tmux new-window -t "$SESSION" -n nexyst
+
+  #10
+  tmux new-window -t "$SESSION" -n temple-okx
+
+  tmux select-window -t "$htop_window_id"
+  tmux select-pane -t "$htop_bottom_pane"
+  tmux attach-session -t "$SESSION"
+}
+
+gwa() {
+  echo git worktree add -b new-branch-name ../directory-name source-branch
+}
+
 debug_capture() {
 BIN_DIR=/fsx/jlee/repos/execution-monorepo/debug
 LD_LIBRARY_PATH=$BIN_DIR/lib \

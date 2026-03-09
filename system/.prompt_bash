@@ -1,7 +1,11 @@
-if [ -n "$BASH_VERSION" ]; then
-  # \e[x;ym : start color scheme, x = 0, y = 30-36
-  # \e[m : stop color scheme
-  # 0;36 : cyan
+# \e[x;ym : start color scheme, x = 0, y = 30-36
+# \e[m : stop color scheme
+# 0;36 : cyan
 
-  export PS1="\[\e[0;36m\][\$(weekday) \t \u@\h:\w]\[\e[m\]\$(get_git_branch)\[\e[m\]\n$ "
+if [ -n "$BASH_VERSION" ]; then
+  if [ "$HOSTNAME" == "aws01-dev-ray01" ]; then
+    export PS1="\[\e[0;31m\][\$(weekday) \t \u@\h:\w]\[\e[m\]\$(get_git_branch)\[\e[m\]\n$ "
+  else
+    export PS1="\[\e[0;36m\][\$(weekday) \t \u@\h:\w]\[\e[m\]\$(get_git_branch)\[\e[m\]\n$ "
+  fi
 fi
