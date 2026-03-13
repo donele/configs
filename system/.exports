@@ -1,18 +1,43 @@
 set -o vi
 export EDITOR=vim
+export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --exclude .git'
 
 if [ "$CODER" == "true" ] || [ "$HOSTNAME" == "aws01-dev-ray01" ] || [ -v WSLENV ]; then
-  export VIM_CPP_INDEXT=2
+  umask 002
 fi
 
 if [ -n "$BASH_VERSION" ]; then
-  [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+  __lazy_load_fzf() {
+    unset -f __lazy_load_fzf fzf fzf-tmux
+    [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+  }
+  fzf() { __lazy_load_fzf; command fzf "$@"; }
+  fzf-tmux() { __lazy_load_fzf; command fzf-tmux "$@"; }
 elif [ -n "$ZSH_VERSION" ]; then
-  [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+  __lazy_load_fzf() {
+    unset -f __lazy_load_fzf fzf fzf-tmux
+    [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+  }
+  fzf() { __lazy_load_fzf; command fzf "$@"; }
+  fzf-tmux() { __lazy_load_fzf; command fzf-tmux "$@"; }
 fi
 
 if [[ -v WSLENV ]]; then
   export PATH=/usr/local/gcc-13/bin:$PATH
   export LD_LIBRARY_PATH=/usr/local/gcc-13/lib64:$LD_LIBRARY_PATH
-fi
 
+  # For codex; lazy-load nvm on first node/codex use.
+  export NVM_DIR="$HOME/.nvm"
+  __lazy_load_nvm() {
+    unset -f __lazy_load_nvm node npm npx nvm codex
+    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+    [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
+    nvm use --silent default >/dev/null 2>&1 || true
+  }
+
+  node() { __lazy_load_nvm; command node "$@"; }
+  npm() { __lazy_load_nvm; command npm "$@"; }
+  npx() { __lazy_load_nvm; command npx "$@"; }
+  nvm() { __lazy_load_nvm; command nvm "$@"; }
+  codex() { __lazy_load_nvm; command codex "$@"; }
+fi

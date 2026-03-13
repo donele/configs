@@ -1,47 +1,34 @@
-if env | grep SHELL | grep bash > /dev/null; then
+if [ -n "$BASH_VERSION" ]; then
   alias s="source ~/.bashrc"
-elif env | grep SHELL | grep zsh > /dev/null; then
+elif [ -n "$ZSH_VERSION" ]; then
   alias s="source ~/.zshrc"
 fi
 
-alias ..="cd .."
-alias ...="cd ../.."
-alias ....="cd ../../.."
-alias .....="cd ../../../.."
-alias -- -="cd -"
-
-alias cdr="cd /fsx/jlee/repos"
-alias cds="cd /fsx/jlee/simbase"
-alias cdf="cd /fsx/jlee/fitbase"
-alias cdo="cd /fsx/jlee/scorebase"
+alias cdf="cd /fsx/jlee; ls"
 alias cdc="cd /fsx/jlee/repos/quant-research/packages/configs"
 alias cdw="cd /fsx/jlee/repos/quant-research/workspace"
-alias cd?="echo [r]epos [s]imbase [f]itbase sc[o]rebase [c]onfigs [w]orkspace"
 
+alias vi='vim'
 alias lt='ls -lrt'
 alias ll='ls -al'
 alias tf='tail -f'
 
+alias ta='tmux a'
+alias tls='tmux ls'
+alias tk='tmux kill-session'
+
 alias gt='git status'
 alias ga='git add'
+alias gh='git checkout'
+alias gw='git worktree'
 alias gc='git commit -v'
 alias gd='git diff'
-alias gl='git log --oneline'
+alias gl='git log -3'
+alias gll='git log -6'
 alias gb='git branch'
-alias gl='git log'
 
 alias py='python'
-alias pf='sudo perf stat -B -e cache-references,cache-misses,cycles,instructions,branches,branch-misses,page-faults,cpu-migrations,context-switches'
-alias mergepdf='gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=_merged.pdf'
-
 alias br='cmake --preset conan-release; cmake --build ./build -j 16'
 alias bd='cmake --preset conan-debug; cmake --build ./debug -j 16'
-alias cmake_debug="cmake -DCMAKE_BUILD_TYPE=Debug"
-
-alias path='echo -e ${PATH//:/\\n}'
-
-alias rbackfill='for d in `ls -d w*`; do cd $d && (py ../backfill.py); cd ..; done'
-alias rana='for d in `ls -d w*`; do cd $d && (py ../ana.py&); cd ..; done'
-alias lt1='ls -lrt w*/log/or* | tail -1'
-
 alias idea="/opt/idea-IC-242.21829.142/bin/idea"
+alias cmake_debug="cmake -DCMAKE_BUILD_TYPE=Debug"
