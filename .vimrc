@@ -5,7 +5,7 @@ let mapleader =" "
 " Plugin Manager
 "   $ curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 "   :PlugInstall
-"   $ ~/.vim/plugged/fxf/install
+"   $ ~/.vim/plugged/fzf/install
 "   $ suto apt install ripgrep
 " =========================
 filetype off                  " Pause filetype detection while plugins are being set up
@@ -77,13 +77,12 @@ endif
 " =========================
 set laststatus=2
 set statusline=
-set statusline+=%f            " file name
-set statusline+=\ [%{&filetype}]
+set statusline+=%{fugitive#statusline()}
+set statusline+=\ %f          " file name
 set statusline+=\ %h%m%r      " flags
 set statusline+=\ %=          " right align
-set statusline+=%{fugitive#statusline()}
 set statusline+=\ %l:%c       " line:col
-set statusline+=\ %p%%        " percentage
+set statusline+=\ [%p%%]      " percentage
 nnoremap <leader>gs :Git<CR>
 nnoremap <leader>gd :Gdiffsplit<CR>
 nnoremap <leader>gb :Git blame<CR>
@@ -127,6 +126,7 @@ nnoremap <leader>6 :colo elflord<cr>
 nnoremap <leader>7 :colo slate<cr>
 
 " Quick write.
+nnoremap <leader>t :tabe<cr>
 nnoremap <leader>p :set paste<cr>
 nnoremap <leader>P :set nopaste<cr>
 nnoremap <leader>h 2gt
