@@ -13,18 +13,18 @@ tv() {
 
     # 1
     tmux rename-window -t my-session:1 htop
-    tmux split-window -v -t htop
-    tmux split-window -h -t htop.2
+    tmux split-window -v -p 80 -t htop -c "/fsx/jlee/repos/quant-research"
+    tmux split-window -h -t htop.2 -c "/fsx/jlee/repos/quant-research"
 
     tmux send-keys -t htop.1 'htop' C-m
-    tmux send-keys -t htop.2 'top' C-m
-    tmux send-keys -t htop.3
+    #tmux send-keys -t htop.2
+    #tmux send-keys -t htop.3
 
     # 2
     tmux new-window -n code -c "/fsx/jlee/repos/execution-monorepo"
-    tmux split-window -v -t code -c "/fsx/jlee/repos/quant-research"
-    tmux send-keys -t code.1 'vim -c "NERDTree"' C-m
-    tmux send-keys -t code.2 'vim -c "NERDTree"' C-m
+    tmux split-window -h -t code -c "/fsx/jlee/repos/execution-monorepo"
+    #tmux send-keys -t code.1 'vim -c "NERDTree"' C-m
+    #tmux send-keys -t code.2 'vim -c "NERDTree"' C-m
 
     # 3
     tmux new-window -n sim -c "/fsx/jlee/simbase"
@@ -114,7 +114,7 @@ tt() {
   tmux rename-window -t "$htop_window_id" htop
   htop_pane_id="$(tmux display-message -pt "$htop_window_id" '#{pane_id}')"
   tmux send-keys -t "$htop_pane_id" 'htop' C-m
-  htop_bottom_pane="$(tmux split-window -v -p 70 -t "$htop_window_id" -P -F '#{pane_id}')"
+  htop_bottom_pane="$(tmux split-window -v -p 80 -t "$htop_window_id" -P -F '#{pane_id}')"
   tmux split-window -h -t "$htop_bottom_pane"
 
   # 2
