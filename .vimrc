@@ -5,7 +5,7 @@ let mapleader =" "
 " Plugin Manager
 "   $ curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 "   :PlugInstall
-"   $ ~/.vim/plugged/fxf/install
+"   $ ~/.vim/plugged/fzf/install
 "   $ suto apt install ripgrep
 " =========================
 filetype off                  " Pause filetype detection while plugins are being set up
@@ -58,6 +58,8 @@ autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "norm
 " autocmd BufEnter * if winnr('$') == 1 && exists("b:NERDTree") | quit | endif
 map <leader>n :NERDTreeToggle<CR>
 let NERDTreeShowHidden=1
+let g:NERDTreeMapJumpNextSibling="☻"
+let g:NERDTreeMapJumpPrevSibling="☺"
 
 " =========================
 " FZF Keybindings
@@ -105,9 +107,6 @@ set diffopt=vertical
 " Disable auto commenting.
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
-" Tab definitions.
-set tabstop=2 softtabstop=0 expandtab shiftwidth=2
-
 " Extend % matching.
 runtime macros/matchit.vim
 " Path used for finding files.
@@ -137,7 +136,7 @@ nnoremap <leader>6 :colo elflord<cr>
 nnoremap <leader>7 :colo slate<cr>
 
 " Quick write.
-nnoremap <leader>w :w<cr>
+nnoremap <leader>t :tabe<cr>
 nnoremap <leader>q :q<cr>
 nnoremap <leader>p :set paste<cr>
 nnoremap <leader>P :set nopaste<cr>

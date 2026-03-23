@@ -15,3 +15,4 @@ for DOT_FILE in "$DOT_DIR"/system/.{exports,function,function_122,alias,prompt_b
 done
 
 export PATH=${PATH}:${DOT_DIR}/python
+export PATH=${PATH}:${DOT_DIR}/scripts
