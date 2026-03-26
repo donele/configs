@@ -111,15 +111,15 @@ tt() {
   htop_window_id="$(tmux new-session -d -s "$SESSION" -c "$HOME" -P -F '#{window_id}')"
 
   # 1
-  tmux rename-window -t "$htop_window_id" htop
-  htop_pane_id="$(tmux display-message -pt "$htop_window_id" '#{pane_id}')"
-  tmux send-keys -t "$htop_pane_id" 'htop' C-m
-  htop_bottom_pane="$(tmux split-window -v -p 80 -t "$htop_window_id" -P -F '#{pane_id}')"
-  tmux split-window -h -t "$htop_bottom_pane"
+  tmux rename-window -t "$first_window_id" qr
+  first_pane_id="$(tmux display-message -pt "$first_window_id" '#{pane_id}')"
+  tmux send-keys -t "$first_pane_id" 'htop' C-m
+  first_bottom_pane="$(tmux split-window -v -p 70 -c "$QRSTART" -t "$first_window_id" -P -F '#{pane_id}')"
+  tmux split-window -h -t "$first_bottom_pane" -c "$QRSTART"
 
   # 2
-  tmux new-window -t "$SESSION" -n code -c "$QRSTART"
-  tmux split-window -h -t "$SESSION:code" -c "$EMSTART"
+  tmux new-window -t "$SESSION" -n em -c "$EMSTART"
+  tmux split-window -h -t "$SESSION:em" -c "$EMSTART"
 
   # 3
   tmux new-window -t "$SESSION" -n sim -c "$SIMWORKSTART"
@@ -148,10 +148,9 @@ tt() {
   tmux new-window -t "$SESSION" -n nexyst
 
   #10
-  tmux new-window -t "$SESSION" -n temple-okx
 
-  tmux select-window -t "$htop_window_id"
-  tmux select-pane -t "$htop_bottom_pane"
+  tmux select-window -t "$first_window_id"
+  tmux select-pane -t "$first_bottom_pane"
   tmux attach-session -t "$SESSION"
 }
 
@@ -162,7 +161,7 @@ gwa() {
 debug_capture() {
 BIN_DIR=/fsx/jlee/repos/execution-monorepo/debug
 LD_LIBRARY_PATH=$BIN_DIR/lib \
-  MTS_TARDIS_NORM_BUCKET=882309744858-versifi-tickdata-ap-northeast-1/apne1 \
+  MTS_TARDIS_NORM_BUCKET=versifi-tickdata-us-east-1/apne1 \
   USER=TRADING-87ff56d2a46a413b91cb5d0772848feb \
   gdb --args \
   $BIN_DIR/bin/sampler \
@@ -173,7 +172,7 @@ LD_LIBRARY_PATH=$BIN_DIR/lib \
 run_capture() {
 BIN_DIR=/fsx/jlee/repos/execution-monorepo/build
 LD_LIBRARY_PATH=$BIN_DIR/lib \
-  MTS_TARDIS_NORM_BUCKET=882309744858-versifi-tickdata-ap-northeast-1/apne1 \
+  MTS_TARDIS_NORM_BUCKET=versifi-tickdata-us-east-1/apne1 \
   USER=TRADING-87ff56d2a46a413b91cb5d0772848feb \
   $BIN_DIR/bin/sampler \
   --date $1 \
@@ -183,7 +182,7 @@ LD_LIBRARY_PATH=$BIN_DIR/lib \
 debug_trading() {
 BUILD_DIR=/fsx/jlee/repos/em_${1}/execution-monorepo/debug
 LD_LIBRARY_PATH=$BDUILD_DIR/lib \
-  MTS_TARDIS_NORM_BUCKET=882309744858-versifi-tickdata-ap-northeast-1/apne1 \
+  MTS_TARDIS_NORM_BUCKET=versifi-tickdata-us-east-1/apne1 \
   USER=TRADING-77ff56d2a46a413b91cb5d0772848feb \
   gdb --args \
   $BUILD_DIR/bin/hft \
@@ -195,7 +194,7 @@ LD_LIBRARY_PATH=$BDUILD_DIR/lib \
 run_trading() {
 BUILD_DIR=/fsx/jlee/repos/em_${1}/execution-monorepo/build
 LD_LIBRARY_PATH=$BDUILD_DIR/lib \
-  MTS_TARDIS_NORM_BUCKET=882309744858-versifi-tickdata-ap-northeast-1/apne1 \
+  MTS_TARDIS_NORM_BUCKET=versifi-tickdata-us-east-1/apne1 \
   USER=TRADING-77ff56d2a46a413b91cb5d0772848feb \
   $BUILD_DIR/bin/hft \
   --date $2 \
@@ -205,7 +204,7 @@ LD_LIBRARY_PATH=$BDUILD_DIR/lib \
 
 function model2s3() {
   SUBDIR="${PWD##*/}"
-  for f in `ls model*json`; do aws s3 cp $f s3://versifi-ather-temp-uploads/$SUBDIR/; done | awk '{print $NF}'
+  for f in `ls model*json`; do aws s3 cp $f s3://versifi-ather-uploads/$SUBDIR/; done | awk '{print $NF}'
 }
 
 function s3list_count_tickdata {
@@ -234,11 +233,11 @@ function s3list_timestamp_tickdata {
 function get_ref {
   dt=$1
   
-  aws s3 cp s3://882309744858-versifi-refdata-ap-northeast-1/canonical/${dt}.json .
+  aws s3 cp s3://versifi-refdata-us-east-1/canonical/${dt}.json .
   parse_json.py ${dt}.json ./canonical/canonical_${dt}.json
   rm ${dt}.json
   
-  aws s3 cp s3://882309744858-versifi-refdata-ap-northeast-1/capture/${dt}.json .
+  aws s3 cp s3://versifi-refdata-us-east-1/capture/${dt}.json .
   parse_json.py ${dt}.json ./capture/capture_${dt}.json
   rm ${dt}.json
 }
@@ -246,19 +245,19 @@ function get_ref {
 function list_s3 {
   case "$1" in
     "tickdata")
-      aws s3 ls s3://882309744858-versifi-tickdata-ap-northeast-1 --recursive > s3_tickdata.txt
+      aws s3 ls s3://versifi-tickdata-us-east-1 --recursive > s3_tickdata.txt
       ;;
     "refdata")
-      aws s3 ls s3://882309744858-versifi-refdata-ap-northeast-1 --recursive > s3_refdata.txt
+      aws s3 ls s3://versifi-refdata-us-east-1 --recursive > s3_refdata.txt
       ;;
     "log")
-      aws s3 ls s3://882309744858-versifi-prod-spec-dumps --recursive > s3_dumps.txt
+      aws s3 ls s3://versifi-spec-dumps-us-east-1 --recursive > s3_dumps.txt
       ;;
     "marketdata")
-      aws s3 ls s3://882309744858-versifi-marketdata-ap-northeast-1 --recursive > s3_marketdata.txt
+      aws s3 ls s3://versifi-marketdata-us-east-1 --recursive > s3_marketdata.txt
       ;;
     "shmdump")
-      aws s3 ls s3://882309744858-versifi-prod-shm-dumps --recursive > s3_shm.txt
+      aws s3 ls s3://versifi-shm-dumps-ap-northeast-1 --recursive > s3_shm.txt
       ;;
     *)
       ;;

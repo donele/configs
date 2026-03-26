@@ -59,6 +59,8 @@ autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "norm
 " autocmd BufEnter * if winnr('$') == 1 && exists("b:NERDTree") | quit | endif
 map <leader>n :NERDTreeToggle<CR>
 let NERDTreeShowHidden=1
+let g:NERDTreeMapJumpNextSibling="☻"
+let g:NERDTreeMapJumpPrevSibling="☺"
 
 " =========================
 " FZF Keybindings
