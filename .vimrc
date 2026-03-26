@@ -1,12 +1,12 @@
 set nocompatible              " be iMproved, required
-let mapleader =" "
+let mapleader = " "
 
 " =========================
 " Plugin Manager
 "   $ curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 "   :PlugInstall
 "   $ ~/.vim/plugged/fzf/install
-"   $ suto apt install ripgrep
+"   $ sudo apt install ripgrep
 " =========================
 filetype off                  " Pause filetype detection while plugins are being set up
 call plug#begin('~/.vim/plugged')
@@ -39,6 +39,7 @@ augroup MyCppIndent
   autocmd FileType cpp execute 'setlocal shiftwidth='.g:cpp_indent
         \ . ' softtabstop='.g:cpp_indent
         \ . ' tabstop='.g:cpp_indent
+        \ . ' cinoptions+=g0'.g:cpp_indent
 augroup END
 
 set expandtab " display spaces instead of '\t'
@@ -104,9 +105,6 @@ set diffopt=vertical
 " Disable auto commenting.
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
-" Tab definitions.
-set tabstop=2 softtabstop=0 expandtab shiftwidth=2
-
 " Extend % matching.
 runtime macros/matchit.vim
 " Path used for finding files.
@@ -118,8 +116,6 @@ set path+=~/gtdev/globaltickdata/source/include
 if !exists(":DiffOrig")
   command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis | wincmd p | diffthis
 endif
-
-syntax on
 
 "----------------------------------------------------------------------------
 " Mappings ------------------------------------------------------------------
@@ -137,7 +133,6 @@ nnoremap <leader>7 :colo slate<cr>
 
 " Quick write.
 nnoremap <leader>t :tabe<cr>
-nnoremap <leader>w :w<cr>
 nnoremap <leader>q :q<cr>
 nnoremap <leader>p :set paste<cr>
 nnoremap <leader>P :set nopaste<cr>
