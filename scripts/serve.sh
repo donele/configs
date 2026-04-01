@@ -1,51 +1,53 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PORT="${PORT:-8080}"
 HOST="${HOST:-127.0.0.1}"
+PORT="${PORT:-8080}"
+SITE_DIR="${SITE_DIR:-/home/jdlee/repos/sgt/site}"
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPOS_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-EM_DOCS_DIR="${REPOS_ROOT}/em/em-feature-documentation/docs"
+ENABLE_INTERNET=0
 
-if [ ! -d "${EM_DOCS_DIR}" ]; then
-  echo "Error: docs directory not found at ${EM_DOCS_DIR}" >&2
+usage() {
+  cat <<USAGE
+Usage: $(basename "$0") [--internet]
+
+Options:
+  --internet   Bind to 0.0.0.0 so docs are reachable over the network/internet.
+USAGE
+}
+
+for arg in "$@"; do
+  case "$arg" in
+    --internet)
+      ENABLE_INTERNET=1
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown argument: $arg" >&2
+      usage >&2
+      exit 1
+      ;;
+  esac
+done
+
+if [[ ! -d "$SITE_DIR" ]]; then
+  echo "Site directory not found: $SITE_DIR" >&2
   exit 1
 fi
 
-USER_NAME="${USER:-$(id -un)}"
-USER_HASH="$(printf '%s' "${USER_NAME}" | sha256sum | awk '{print $1}')"
-QR_ENABLED_USER_HASH="51264ad310558c6744c6e5a80463df6f9bb92edf1023b63f2a8da507e7b5d5fa"
-
-SHOW_QR="false"
-QR_DOCS_DIR="${REPOS_ROOT}/qr/qr-wsl/docs"
-if [ "${USER_HASH}" = "${QR_ENABLED_USER_HASH}" ] && [ -d "${QR_DOCS_DIR}" ]; then
-  SHOW_QR="true"
+if [[ "$ENABLE_INTERNET" -eq 1 ]]; then
+  HOST="0.0.0.0"
 fi
 
-if [ "${SHOW_QR}" = "true" ]; then
-  SERVER_ROOT="${REPOS_ROOT}"
-  DOC_ENTRY="/em/em-feature-documentation/docs/index.html"
-else
-  SERVER_ROOT="${EM_DOCS_DIR}"
-  DOC_ENTRY="/index.html"
+cd "$SITE_DIR"
+
+echo "Serving rendered docs from: $SITE_DIR"
+echo "Listening on: http://${HOST}:${PORT}/"
+if [[ "$ENABLE_INTERNET" -eq 1 ]]; then
+  echo "Internet mode enabled (--internet). Ensure firewall/NAT allows port ${PORT}."
 fi
 
-cd "${SERVER_ROOT}"
-
-if [ -n "${WSL_DISTRO_NAME:-}" ]; then
-  WINDOWS_HOST=$(awk '/^nameserver /{print $2; exit}' /etc/resolv.conf 2>/dev/null || true)
-else
-  WINDOWS_HOST=""
-fi
-
-echo "Serving documentation from:"
-echo " - ${SERVER_ROOT}"
-echo "Available at:"
-echo " - http://localhost:${PORT}${DOC_ENTRY} (recommended)"
-echo " - http://${HOST}:${PORT}"
-if [ -n "${WINDOWS_HOST}" ]; then
-  echo " - http://${WINDOWS_HOST}:${PORT}${DOC_ENTRY}"
-fi
-
-exec python3 -m http.server "${PORT}" --bind "${HOST}"
+exec python3 -m http.server "$PORT" --bind "$HOST"
