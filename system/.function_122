@@ -270,45 +270,41 @@ function list_s3 {
 
 list_state() {
 CSVFILE=$1
-
 shift
-COLS=""
-for arg in "$@"; do
-    COLS="$COLS,$arg"
-done
 
-awk -v cols=$COLS '
+# Accept either space-separated args or a single comma-separated string.
+COLS=$(IFS=,; echo "$*")
+
+awk -v cols="$COLS" '
 BEGIN {
-  FS=OFS=","  # CSV delimiter
-  split(cols, wanted, ",")  # Split requested column names into array
+  FS=OFS=",";
+  n = split(cols, wanted, ",");
 }
 NR==1 {
-  # Map header names to their column positions
   for (i = 1; i <= NF; i++) {
-    header[$i] = i
+    header[$i] = i;
   }
-  # Build list of column indexes to print
-  for (j in wanted) {
-    colname = wanted[j]
+  for (j = 1; j <= n; j++) {
+    colname = wanted[j];
+    if (colname == "") {
+      continue;
+    }
     if (colname in header) {
-      idx[++count] = header[colname]
+      idx[++count] = header[colname];
     } else {
-      # Warn if column not found
-      printf("Warning: column \"%s\" not found in header\n", colname) > "/dev/stderr"
+      print "Warning: column [" colname "] not found in header" > "/dev/stderr";
     }
   }
 }
 NR >= 1 {
-  # Print only the selected columns
-  out = ""
+  out = "";
   for (k = 1; k <= count; k++) {
-    out = out (k > 1 ? OFS : "") $idx[k]
+    out = out (k > 1 ? OFS : "") $idx[k];
   }
-  print out
+  print out;
 }
-' $CSVFILE
+' "$CSVFILE"
 }
-
 function header() {
   head -1 $1 | awk 'BEGIN{RS=","};{print NR, $0}' | pr -tw140 -6
 }
