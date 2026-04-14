@@ -3,6 +3,7 @@ set -euo pipefail
 
 HOST="${HOST:-127.0.0.1}"
 PORT="${PORT:-8080}"
+REPO_DIR="${REPO_DIR:-/home/jdlee/repos/sgt}"
 SITE_DIR="${SITE_DIR:-/home/jdlee/repos/sgt/site}"
 
 ENABLE_INTERNET=0
@@ -33,14 +34,23 @@ for arg in "$@"; do
   esac
 done
 
-if [[ ! -d "$SITE_DIR" ]]; then
-  echo "Site directory not found: $SITE_DIR" >&2
+if [[ ! -d "$REPO_DIR" ]]; then
+  echo "Repo directory not found: $REPO_DIR" >&2
   exit 1
 fi
 
 if [[ "$ENABLE_INTERNET" -eq 1 ]]; then
   HOST="0.0.0.0"
 fi
+
+cd "$REPO_DIR"
+
+if ! python3 -c "import mkdocs" >/dev/null 2>&1; then
+  python3 -m pip install -r docs/requirements.txt
+fi
+
+echo "Building docs into: $SITE_DIR"
+mkdocs build --clean --site-dir "$SITE_DIR"
 
 cd "$SITE_DIR"
 
