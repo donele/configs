@@ -1,5 +1,15 @@
+findcpp() {
+  find . \( -name "*.cpp" -o -name "*.h" -o -name "*.hpp" \) -exec grep -Hn "$1" {} \;
+}
+
+findpy() {
+  find . \( -name "*.py" -o -name "*.ipynb" \) -exec grep -Hn "$1" {} \;
+}
+
 get_git_branch() {
-    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+  local b
+  b=$(git branch --show-current 2>/dev/null) || return
+  [ -n "$b" ] && printf " (%s)" "$b"
 }
 
 weekday() {
@@ -7,35 +17,68 @@ weekday() {
 }
 
 ltf() {
-    last_file=`ls -rt *.log | tail -n 1`
-    echo $ tail -f $last_file
-    tail -f $last_file
+  last_file=`ls -rt *.log | tail -n 1`
+  echo $ tail -f $last_file
+  tail -f $last_file
 }
 
-tv() {
-    if tmux has-session -t my-session > /dev/null 2>&1; then
-        echo tmux attaching to my-session
-        tmux attach -d -t my-session
-    
-    else
-        echo tmux creating my-session
-        tmux new-session -d -s my-session -c "$HOME"
-    
-        tmux rename-window -t my-session:1 htop
-        tmux send-keys -t htop 'htop' C-m
-    
-        tmux new-window -n code -c "/fsx/jlee/repos/execution-monorepo"
-        tmux split-window -v -p 10 -t code
-        tmux send-keys -t code.1 'vim -c "NERDTree"' C-m
-    
-        tmux new-window -n sim -c "/fsx/jlee/simbase"
-        tmux split-window -h -t sim -c "/fsx/jlee/simbase"
-    
-        tmux new-window -n capture -c "/fsx/jlee/fitbase"
-        tmux split-window -h -t capture  -c "/fsx/jlee/fitbase"
-    
-        tmux select-window -t code.1
-        tmux select-pane -t 1
-        tmux -2 attach-session -t my-session
-    fi
+freetmp() {
+  cd /tmp && find . -name "TRADING*" -type d -mmin +300 | xargs sudo rm -rf
+}
+
+function md2pdf() {
+  pandoc --pdf-engine=pdfroff $1 -o $2
+}
+
+function every30sec() {
+  while true; do $1; sleep 30; done
+}
+
+function du_by_ext() {
+  find . -type f -printf "%s %f\n" | awk '{
+      ext = "";
+      if ($2 ~ /\./) {
+          ext = substr($2, match($2, /\.[^.]+$/) + 1);
+      } else {
+          ext = "no_extension";
+      }
+      size[ext] += $1;
+  } END {
+      for (e in size) {
+          print size[e] , e
+      }
+  }' | sort -k1nr | numfmt --field=1 --to=iec --suffix=B | awk '{printf("%8s  %s\n", $1, $2)}'
+}
+
+# Find and Replace in file(s).
+function myrep {
+if (( $# == 2 )); then
+	if grep $2 $1 > /dev/null 2>&1; then
+		echo "========= Pattern $2 found in files: =========="
+		grep $2 $1
+	else
+		echo "Pattern $2 was not found in $1."
+	fi
+elif (( $# == 3 )); then
+	if grep $2 $1 > /dev/null 2>&1; then
+	    for f in `grep -l $2 $1 2>/dev/null | grep -v repTry`; do echo; echo "========== $f =========="; sed 's/'"$2"'/'"$3"'/g' $f > ${f}.repTry; diff $f ${f}.repTry; rm ${f}.repTry; done
+	    echo
+	    echo -n "Execute the change? [y/N]: "
+	    read answer
+      if [[ "x$answer" == "xy" ]]; then
+        echo
+        echo "Pattern $2 was replaced by $3 in files:"
+        for f in `grep -l $2 $1 2>/dev/null | grep -v repTry`; do echo $f; sed 's/'"$2"'/'"$3"'/g' $f > ${f}.repTry; mv ${f}.repTry $f; done
+      else
+        echo "Aborted."
+      fi
+  else
+		echo "Pattern $2 was not found in $1."
+	fi
+else
+	echo "Usage: myrep <file> <match-pattern>"
+	echo "       myrep <file> <match-pattern> <new-string>"
+	echo "       myrep \"file-pattern\" <match-pattern>"
+	echo "       myrep \"file-pattern\" <match-pattern> <new-string>"
+fi
 }
