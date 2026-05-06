@@ -2,10 +2,6 @@ set -o vi
 export EDITOR=vim
 export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --exclude .git'
 
-if [ "$CODER" == "true" ] || [ "$HOSTNAME" == "aws01-dev-ray01" ] || [ -v WSLENV ]; then
-  umask 002
-fi
-
 if [ -n "$BASH_VERSION" ]; then
   __lazy_load_fzf() {
     unset -f __lazy_load_fzf fzf fzf-tmux
