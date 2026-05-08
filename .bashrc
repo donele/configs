@@ -17,5 +17,6 @@ done
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-export PATH=${PATH}:${DOT_DIR}/python
-export PATH=${PATH}:${DOT_DIR}/scripts
+[ -d "${DOT_DIR}/python" ] && export PATH="${PATH}:${DOT_DIR}/python"
+[ -d "${DOT_DIR}/scripts" ] && export PATH="${PATH}:${DOT_DIR}/scripts"
+[ -d "/home/jdlee/.foundry/bin" ] && export PATH="${PATH}:/home/jdlee/.foundry/bin"
