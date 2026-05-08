@@ -34,3 +34,13 @@ alias br='cmake --preset conan-release; cmake --build ./build -j 16'
 alias bd='cmake --preset conan-debug; cmake --build ./debug -j 16'
 alias idea="/opt/idea-IC-242.21829.142/bin/idea"
 alias cmake_debug="cmake -DCMAKE_BUILD_TYPE=Debug"
+alias mergepdf='gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=_merged.pdf'
+alias path='echo -e ${PATH//:/\\n}'
+
+alias z620='ssh jdlee@74.90.53.197'
+alias z620_8000='ssh -N -L 18000:127.0.0.1:8000 jdlee@74.90.53.197'
+alias z620_8051='ssh -N -L 18051:127.0.0.1:8051 jdlee@74.90.53.197'
+alias z620_8060='ssh -N -L 18060:127.0.0.1:8060 jdlee@74.90.53.197'
+alias z620_8070='ssh -N -L 18070:127.0.0.1:8070 jdlee@74.90.53.197'
+alias z620_8080='ssh -N -L 18080:127.0.0.1:8080 jdlee@74.90.53.197'
+alias z620_8888='ssh -N -L 18888:127.0.0.1:8888 jdlee@74.90.53.197'
