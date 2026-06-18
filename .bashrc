@@ -20,3 +20,5 @@ export NVM_DIR="$HOME/.nvm"
 [ -d "${DOT_DIR}/python" ] && export PATH="${PATH}:${DOT_DIR}/python"
 [ -d "${DOT_DIR}/scripts" ] && export PATH="${PATH}:${DOT_DIR}/scripts"
 [ -d "/home/jdlee/.foundry/bin" ] && export PATH="${PATH}:/home/jdlee/.foundry/bin"
+. "$HOME/.cargo/env"
+ulimit -S -n 1048576 2>/dev/null
